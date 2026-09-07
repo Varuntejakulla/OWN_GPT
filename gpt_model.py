@@ -27,6 +27,19 @@ class GPT(nn.Module):
         self.ln_final = nn.LayerNorm(embed_dim)
         self.head = nn.Linear(embed_dim,vocab_size)
         self.max_seq_len = max_seq_len
+        mask = torch.tril(
+            torch.ones(
+                max_seq_len,
+                max_seq_len
+            )
+        )
+
+        self.register_buffer(
+            "causal_mask",
+            mask
+        )
+
+        
 
     def forward(self, idx, mask=None):
         # idx: (batch, seq_len)
@@ -37,6 +50,11 @@ class GPT(nn.Module):
         x = self.token_embed(idx)  # (batch, seq_len, embed_dim)
         # add positional encoding (slice to match seq_len)
         x = x + self.pos_enc[:seq_len, :].unsqueeze(0).to(x.device)
+        mask = self.causal_mask[
+            :seq_len,
+            :seq_len
+        ]
+       
 
         # pass through transformer blocks
         for block in self.blocks:

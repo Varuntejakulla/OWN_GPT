@@ -7,9 +7,9 @@ class CharTokenizer:
         chars =sorted(list(set(text)))
         if special_tokens:
             chars= special_tokens+chars
-            self.stoi = {ch:i for i,ch in enumerate(chars)}
-            self.itos = {i:ch for i,ch in enumerate(chars)}
-            self.vocab_size = len(chars)
+        self.stoi = {ch:i for i,ch in enumerate(chars)}
+        self.itos = {i:ch for i,ch in enumerate(chars)}
+        self.vocab_size = len(chars)
 
     def encode(self,text):
 
